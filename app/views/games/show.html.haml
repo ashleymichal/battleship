@@ -1,0 +1,12 @@
+= render('shared/header')
+
+%table.game_board
+  %tr
+    %th
+    - ('A'..'J').each do |coord|
+      %th= coord
+  - @game.board.each_with_index do |row, index|
+    %tr
+      %td= index+1
+      - row.each_with_index do |cell, index|
+        %td= link_to (cell[:contents] || "empty"), edit_game_path
