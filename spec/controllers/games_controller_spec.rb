@@ -24,6 +24,7 @@ RSpec.describe GamesController, type: :controller do
     end
 
   end
+
   describe "GET show" do
     before do
       get :show, id: game.id

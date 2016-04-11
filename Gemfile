@@ -42,6 +42,7 @@ group :development, :test do
   # Use RSpec instead of Minitest
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
+  gem 'guard-rspec'
 end
 
 group :development do
