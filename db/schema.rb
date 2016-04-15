@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160415153214) do
+ActiveRecord::Schema.define(version: 20160419172318) do
 
   create_table "games", force: :cascade do |t|
     t.text     "board"
@@ -23,9 +23,9 @@ ActiveRecord::Schema.define(version: 20160415153214) do
 
   create_table "ships", force: :cascade do |t|
     t.string   "ship_type"
-    t.integer  "hits"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "hits",       default: 0
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
 end

@@ -40,4 +40,32 @@ RSpec.describe GamesController, type: :controller do
 
   end
 
+  describe "PATCH fire" do
+
+    it "assigns the @game variable" do
+      patch :fire, id: game.id, x: 0, y: 0
+      expect(assigns(:game)).to eql(game)
+    end
+
+    context "when cell status is :blank" do
+      it "changes the board to reflect the hit" do
+        expect{ patch :fire, id: game.id, x: 0, y: 0 }.to change{ Game.find(game.id).board }
+      end
+    end
+
+    context "when cell status is not :blank" do
+      before { game.fire!(0, 0) }
+
+      it "passes an error through the flash" do
+        patch :fire, id: game.id, x: 0, y: 0
+        expect(flash[:errors]).to eql("You already fired on that cell!")
+      end
+    end
+
+    it "renders the show view" do
+      patch :fire, id: game.id, x: 0, y: 0
+      expect(response).to redirect_to Game.find(game.id)
+    end
+  end
+
 end

@@ -1,5 +1,3 @@
-= render('shared/header')
-
 %table.game_board
   %tr
     %th
@@ -7,6 +5,6 @@
       %th= coord
   - @game.board.each_with_index do |row, row_index|
     %tr
-      %td= row_index+1
+      %td= row_index + 1
       - row.each_with_index do |cell, col_index|
-        %td= cell[:contents].try(:id) || "empty"
+        %td=   link_to cell_contents(cell), fire_game_path(@game, x: row_index, y: col_index), method: :patch, class: cell[:status]

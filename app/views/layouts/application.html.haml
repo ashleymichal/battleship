@@ -5,6 +5,12 @@
   = javascript_include_tag 'application'
   = csrf_meta_tags
 %body
-  .main
-  = yield
+  .container
 
+    = render('shared/header')
+
+    .col-md-8.col-md-offset-2
+
+      = yield
+
+      = render('shared/error_messages', flash: flash)
