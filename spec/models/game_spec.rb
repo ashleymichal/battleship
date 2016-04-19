@@ -85,6 +85,10 @@ RSpec.describe Game, type: :model do
         it "hits the ship object" do
           expect(Ship.find(cell[:contents]).hits).to eql(1)
         end
+
+        it "does not decrement number of 'shots_remaining'" do
+          expect(subject.shots_remaining).to eql(50)
+        end
       end
 
       context "cell is unoccupied" do
@@ -94,6 +98,11 @@ RSpec.describe Game, type: :model do
         end
         it "changes the cell's status to :miss" do
           expect(cell[:status]).to eql(:miss)
+        end
+
+        it "decrements the number of 'shots_remaining'" do
+          subject.reload
+          expect(subject.shots_remaining).to eql(49)
         end
       end
 

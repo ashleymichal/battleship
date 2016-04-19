@@ -17,8 +17,9 @@ ActiveRecord::Schema.define(version: 20160419172318) do
     t.text     "board"
     t.text     "ships"
     t.integer  "score"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.integer  "shots_remaining", default: 50
   end
 
   create_table "ships", force: :cascade do |t|

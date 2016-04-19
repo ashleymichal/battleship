@@ -9,7 +9,7 @@ class Game < ActiveRecord::Base
 
   # Sets up new board with randomly placed ships
   def set_game_board
-    self.board ||= default_board
+    self.board = default_board
     randomly_place_ships
   end
 
@@ -99,6 +99,7 @@ class Game < ActiveRecord::Base
 
   def miss!(cell)
     cell[:status] = :miss
+    Game.decrement_counter(:shots_remaining, self.id)
     self.save
   end
 
