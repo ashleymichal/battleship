@@ -1,26 +1,21 @@
-.game_board {
+.cell {
+  height: 45px;
+  /*color : white;*/
+  margin: 2px;
+}
 
-  margin: auto;
-
-  th {
-    text-align: center;
-  }
-
-  td {
-    padding: 10px;
-    margin:  2px;
-  }
-
+.label {
+  color: black;
 }
 
 .hit {
-  color: red;
+  background-color: red;
 }
 
 .miss {
-  color: yellow;
+  background-color: yellow;
 }
 
 .blank {
-  color: green;
+  background-color: blue;
 }
