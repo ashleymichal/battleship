@@ -20,3 +20,5 @@ req_file config/database.yml "$DATABASE_YML_MYSQL"
 RAILS_ENV=test run bundle exec rake db:drop db:create db:migrate
 
 run bundle exec rspec
+
+run bundle exec rake jasmine:ci

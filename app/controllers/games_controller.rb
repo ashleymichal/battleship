@@ -13,13 +13,11 @@ class GamesController < ApplicationController
   end
 
   def fire
-    @game = Game.find(params[:id])
-    begin
-      @game.fire!(params[:x].to_i, params[:y].to_i)
-    rescue AlreadyHitError
-      flash[:errors] = "You already fired on that cell!"
-    end
-    redirect_to @game
+    game = Game.find(params[:id])
+    x = params[:x].to_i
+    y = params[:y].to_i
+    game.fire!(x, y)
+    render json: { status: game.get_cell(x, y)[:status] }
   end
 
 end
