@@ -1,6 +1,6 @@
 .row{ :'ng-app' => "battleship" }
   .col-md-6.col-md-offset-1
-    .row.game_board
+    .row.game_board{ :'ng-controller' => "GameController as game", :'ng-init' => "init(#{@game.id})" }
       .col-xs-1
       - ('A'..'J').each do |coord|
         .col-xs-1.cell.label= coord
@@ -9,4 +9,4 @@
         .col-xs-1.cell.label
           %h6= row_index + 1
         -row.each_with_index do |cell, cell_index|
-          %a.col-xs-1.cell{ :'ng-controller' => "CellController", :'ng-init' => "init(#{row_index}, #{cell_index}, '#{cell[:status]}', '#{fire_game_path}')", :'ng-class' => "status", :'ng-click' => "(status == 'blank') && fire()" }
+          %a.col-xs-1.cell{ :'ng-controller' => "CellController", :'ng-init' => "init(#{row_index}, #{cell_index}, '#{cell[:status]}')", :'ng-class' => "status", :'ng-click' => "fire()" }

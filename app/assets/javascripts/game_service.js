@@ -1,15 +1,22 @@
 angular.module('battleship')
-.factory('GameService', function($http){
+.service('GameService', function($http) {
   return {
-    "fire" : function(x, y, path){
+    set_game_id: function(id){
+      this.game_id = id;
+    },
+    fire: function(x, y){
       return $http({
         method: 'PATCH',
-        url: path,
-        params: {
-          x: x,
-          y: y
-        }
+        url: this.fire_path(),
+        params: { x: x,
+                  y: y }
       })
+      .then(function(response) {
+        return response.data.status;
+      });
+    },
+    fire_path: function(){
+      return this.game_id + "/fire.json";
     }
   }
 });

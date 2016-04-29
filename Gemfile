@@ -22,9 +22,11 @@ group :development, :test do
   # Use RSpec instead of Minitest
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
-  gem 'guard-rspec'
   # Use Jasmine to test Angular
   gem 'jasmine'
+  # Use Guard to automate tests
+  gem 'guard-rspec'
+  gem 'guard-jasmine'
 end
 
 group :development do

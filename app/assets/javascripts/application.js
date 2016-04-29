@@ -17,4 +17,4 @@
 //= require_tree .
 //= require bootstrap-sprockets
 
-angular.module('battleship', [])
+angular.module('battleship', []);
