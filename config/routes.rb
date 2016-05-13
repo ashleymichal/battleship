@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
-  resources :games, except: [:edit, :destroy, :index, :update] do
-    patch :fire, on: :member, defaults: { format: :json }
+  resources :games, only: [:create, :show], defaults: { format: :json } do
+    patch :fire, on: :member
   end
-  root 'games#new'
+
 end

@@ -24,10 +24,13 @@ class Game < ActiveRecord::Base
   #
   # @param [Integer] x row index
   # @param [Integer] y column index
+  #
+  # @raise [AlreadyHitError]
   def fire!(x, y)
     cell = get_cell(x, y)
-    raise AlreadyHitError unless cell[:status] == :blank
+    raise AlreadyHitError, "Already Fired" unless cell[:status] == :blank
     cell[:contents] ? hit!(cell) : miss!(cell)
+    cell[:status]
   end
 
   # Retrieves a 'cell' Hash from within the board attribute
