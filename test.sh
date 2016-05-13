@@ -16,9 +16,8 @@ run bundle install
 
 req_exec rspec
 req_file config/database.yml "$DATABASE_YML_MYSQL"
+req_file config/secrets.yml "config/sample.secrets.yml"
 
 RAILS_ENV=test run bundle exec rake db:drop db:create db:migrate
 
 run bundle exec rspec
-
-run bundle exec rake jasmine:ci

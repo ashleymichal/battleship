@@ -1,0 +1,2 @@
+class InvalidCoordinatesError < StandardError
+end

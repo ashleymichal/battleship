@@ -1,4 +1,5 @@
 class Game < ActiveRecord::Base
+  require 'cell'
   SHIP_COUNTS = { Ship::CARRIER_TYPE => 2,
                   Ship::VESSEL_TYPE  => 3,
                   Ship::BOAT_TYPE    => 5 }
@@ -7,16 +8,27 @@ class Game < ActiveRecord::Base
   serialize :board
   before_create :set_game_board
 
-  # Sets up new board with randomly placed ships
+  def self.default_board
+    Array.new(ROWS) { Array.new(COLUMNS) { Cell.new } }
+  end
+
+  # @return [Array<Ship>] standard fleet for start of game
+  def self.default_ships
+    Ship::SHIP_SIZES.inject([]) do |fleet, (type, size)|
+      SHIP_COUNTS[type].times { fleet << Ship.build(type) }
+      fleet
+    end
+  end
+
+  # Sets up new board
   def set_game_board
-    self.board = default_board
-    randomly_place_ships
+    self.board = Game.default_board
   end
 
   # @param [Ship] ship
   # @param [Array] position list of sequential cells
   def place_ship(ship, position)
-    position.map { |cell| cell[:contents] = ship.id }
+    position.map { |cell| cell.contents = ship.id }
   end
 
   # Changes board to update status of cell and hit count of ship contained in cell
@@ -24,19 +36,22 @@ class Game < ActiveRecord::Base
   #
   # @param [Integer] x row index
   # @param [Integer] y column index
+  #
+  # @raise [AlreadyHitError]
+  # @return [Symbol] cell.status
   def fire!(x, y)
-    cell = get_cell(x, y)
-    raise AlreadyHitError unless cell[:status] == :blank
-    cell[:contents] ? hit!(cell) : miss!(cell)
+    get_cell(x, y).fire!.tap do |status|
+      self.save
+      Game.decrement_counter(:shots_remaining, self.id) if status == :miss
+    end
   end
 
-  # Retrieves a 'cell' Hash from within the board attribute
-  #
   # @param [Integer] x row index
   # @param [Integer] y column index
   #
   # @return [Hash<Symbol, Symbol>] cell hash with :status and :contents
   def get_cell(x, y)
+    raise InvalidCoordinatesError if [x, y].any? { |c| c < 0 || c > 9 }
     board[x][y]
   end
 
@@ -54,28 +69,16 @@ class Game < ActiveRecord::Base
     all_lines.flat_map { |line| empty_runs(line, size) }
   end
 
-  private
-
   def randomly_place_ships
-    default_ships.each do |ship|
+    Game.default_ships.each do |ship|
       place_ship(ship, random_position(ship.size))
     end
   end
 
-  def default_board
-    Array.new(ROWS) { Array.new(COLUMNS) { { contents: nil, status: :blank } } }
-  end
-
-  # @return [Array<Ship>] standard fleet for start of game
-  def default_ships
-    Ship::SHIP_SIZES.inject([]) do |fleet, (type, size)|
-      SHIP_COUNTS[type].times { fleet << Ship.build(type) }
-      fleet
-    end
-  end
+  protected
 
   def empty_runs(line, size)
-    line.each_cons(size).select { |run| run.none? { |cell| cell[:contents] } }
+    line.each_cons(size).select { |run| run.none? { |cell| cell.contents } }
   end
 
   def all_lines
@@ -90,17 +93,6 @@ class Game < ActiveRecord::Base
     board.transpose
   end
 
-  def hit!(cell)
-    cell[:status] = :hit
-    ship = Ship.find(cell[:contents])
-    ship.hit!
-    self.save
-  end
 
-  def miss!(cell)
-    cell[:status] = :miss
-    Game.decrement_counter(:shots_remaining, self.id)
-    self.save
-  end
 
 end
